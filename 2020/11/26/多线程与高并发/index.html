@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>多线程与高并发 | JAVA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  <meta name="keywords" content="多线程与高并发">
+  
+  
+  
+  
+  <meta name="description" content="一、并发基础1.1 并发三大特性 原子性 指一个操作是不可中断的，要么全部执行成功，要么全部失败   有序性 程序执行顺序按照代码的先后顺序执行  可见性 指多个线程访问同一个变量时，一个线程修改了这个变量的值,其它线程能够立马看到修改的值   1.2 线程基础1. 线程的实现3种实现方式 继承Thread 实现Runable接口 实现callable接口，有返回值  2.线程5种状态 新建、就绪">
+<meta name="keywords" content="多线程与高并发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="多线程与高并发">
+<meta property="og:url" content="https://sunshine23lin.github.io/2020/11/26/多线程与高并发/index.html">
+<meta property="og:site_name" content="JAVA">
+<meta property="og:description" content="一、并发基础1.1 并发三大特性 原子性 指一个操作是不可中断的，要么全部执行成功，要么全部失败   有序性 程序执行顺序按照代码的先后顺序执行  可见性 指多个线程访问同一个变量时，一个线程修改了这个变量的值,其它线程能够立马看到修改的值   1.2 线程基础1. 线程的实现3种实现方式 继承Thread 实现Runable接口 实现callable接口，有返回值  2.线程5种状态 新建、就绪">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-11-26T09:32:04.471Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="多线程与高并发">
+<meta name="twitter:description" content="一、并发基础1.1 并发三大特性 原子性 指一个操作是不可中断的，要么全部执行成功，要么全部失败   有序性 程序执行顺序按照代码的先后顺序执行  可见性 指多个线程访问同一个变量时，一个线程修改了这个变量的值,其它线程能够立马看到修改的值   1.2 线程基础1. 线程的实现3种实现方式 继承Thread 实现Runable接口 实现callable接口，有返回值  2.线程5种状态 新建、就绪">
+  
+    <link rel="alternate" href="/atom.xml" title="JAVA" type="application/atom+xml">
+  
+
+  
+
+  <link rel="icon" href="/css/images/mylogo.jpg">
+  <link rel="apple-touch-icon" href="/css/images/mylogo.jpg">
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Montserrat:700" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic" rel="stylesheet" type="text/css">
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+  <style type="text/css">
+    @font-face{font-family:futura-pt; src:url("/css/fonts/FuturaPTBold.otf") format("woff");font-weight:500;font-style:normal;}
+    @font-face{font-family:futura-pt-light; src:url("/css/fonts/FuturaPTBook.otf") format("woff");font-weight:lighter;font-style:normal;}
+    @font-face{font-family:futura-pt-italic; src:url("/css/fonts/FuturaPTBookOblique.otf") format("woff");font-weight:400;font-style:italic;}
+}
+
+  </style>
+  <link rel="stylesheet" href="/css/style.css">
+
+  <script src="/js/jquery-3.1.1.min.js"></script>
+  <script src="/js/bootstrap.js"></script>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.css">
+
+  
+    <link rel="stylesheet" href="/css/dialog.css">
+  
+
+  
+
+  
+    <link rel="stylesheet" href="/css/header-post.css">
+  
+
+  
+  
+  
+    <link rel="stylesheet" href="/css/vdonate.css">
+  
+
+</head>
+</html>
+
+
+  <body data-spy="scroll" data-target="#toc" data-offset="50">
+
+
+  
+  <div id="container">
+    <div id="wrap">
+      
+        <header>
+
+    <div id="allheader" class="navbar navbar-default navbar-static-top" role="navigation">
+        <div class="navbar-inner">
+          
+          <div class="container"> 
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+
+            
+              <a class="brand" style="
+                 margin-top: 0px;" href="#" data-toggle="modal" data-target="#myModal">
+                  <img width="124px" height="124px" alt="Hike News" src="/css/images/mylogo.jpg">
+              </a>
+            
+            
+            <div class="navbar-collapse collapse">
+              <ul class="hnav navbar-nav">
+                
+                  <li> <a class="main-nav-link" href="/">首页</a> </li>
+                
+                  <li> <a class="main-nav-link" href="/archives">归档</a> </li>
+                
+                  <li> <a class="main-nav-link" href="/categories">分类</a> </li>
+                
+                  <li> <a class="main-nav-link" href="/tags">标签</a> </li>
+                
+                  <li> <a class="main-nav-link" href="/about">关于</a> </li>
+                
+                  <li><div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder>
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="请输入关键词...">
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(无标题)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div></li>
+            </ul></div>
+          </div>
+                
+      </div>
+    </div>
+
+</header>
+
+
+
+      
+            
+      <div id="content" class="outer">
+        
+          <section id="main" style="float:none;"><article id="post-多线程与高并发" style="width: 75%; float:left;" class="article article-type-post" itemscope itemprop="blogPost">
+  <div id="articleInner" class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="thumb" itemprop="name">
+      多线程与高并发
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      
+	<a href="/2020/11/26/多线程与高并发/" class="article-date">
+	  <time datetime="2020-11-26T08:55:29.000Z" itemprop="datePublished">2020-11-26</time>
+	</a>
+
+      
+    <a class="article-category-link" href="/categories/并发编程/">并发编程</a>
+
+      
+	<a class="article-views">
+	<span id="busuanzi_container_page_pv">
+		阅读量<span id="busuanzi_value_page_pv"></span>
+	</span>
+	</a>
+
+      
+
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="一、并发基础"><a href="#一、并发基础" class="headerlink" title="一、并发基础"></a>一、并发基础</h1><h2 id="1-1-并发三大特性"><a href="#1-1-并发三大特性" class="headerlink" title="1.1 并发三大特性"></a>1.1 并发三大特性</h2><ul>
+<li><p>原子性</p>
+<p>指一个操作是不可中断的，要么全部执行成功，要么全部失败 </p>
+</li>
+<li><p>有序性</p>
+<p>程序执行顺序按照代码的先后顺序执行</p>
+</li>
+<li><p>可见性</p>
+<p>指多个线程访问同一个变量时，一个线程修改了这个变量的值,其它线程能够立马看到修改的值</p>
+</li>
+</ul>
+<h2 id="1-2-线程基础"><a href="#1-2-线程基础" class="headerlink" title="1.2 线程基础"></a>1.2 线程基础</h2><h3 id="1-线程的实现3种实现方式"><a href="#1-线程的实现3种实现方式" class="headerlink" title="1. 线程的实现3种实现方式"></a>1. 线程的实现3种实现方式</h3><ol>
+<li>继承Thread</li>
+<li>实现Runable接口</li>
+<li>实现callable接口，有返回值</li>
+</ol>
+<h3 id="2-线程5种状态"><a href="#2-线程5种状态" class="headerlink" title="2.线程5种状态"></a>2.线程5种状态</h3><blockquote>
+<p>新建、就绪、运行、阻塞、死亡</p>
+</blockquote>
+<h3 id="3-线程之间通讯"><a href="#3-线程之间通讯" class="headerlink" title="3.线程之间通讯"></a>3.线程之间通讯</h3><ul>
+<li>object对象wait()，notifyAll()</li>
+<li>Codition对象await(),signalAll()</li>
+</ul>
+<h3 id="3-线程中断"><a href="#3-线程中断" class="headerlink" title="3.线程中断"></a>3.线程中断</h3><ol>
+<li>调用interrupt()方法+return</li>
+<li>调用interrupt()方法+抛异常throw new InterruptedException()</li>
+</ol>
+<blockquote>
+<p>Interrupt方法就是把中断状态由false变成true</p>
+</blockquote>
+<h2 id="1-3-Volatile关键字"><a href="#1-3-Volatile关键字" class="headerlink" title="1.3 Volatile关键字"></a>1.3 Volatile关键字</h2><blockquote>
+<p>Volatile是java一个关键字，该关键字修饰的字段，被某线程修改时，对其它线程可见。它保证了线程可见性和禁止指令重排序</p>
+</blockquote>
+<ol>
+<li><p>底层实现</p>
+<blockquote>
+<p>在java内存模型当中，线程是不能直接操作主内存共享变量，而是拷贝一份到自己工作内存当中。对于声明volatile变量进行写操作时，会马上写入主内存，并导致其它线程工作内存的值无效，当其它线程需要访问该变量时，就需要从主内存获取最新的值。此时就保证了线程可见。</p>
+<p>JVM底层操作：JVM会向处理器发送一个Lock前缀指令，Lock前缀会引起处理器缓存回写到主内存，并使其它处理器的缓存无效</p>
+</blockquote>
+</li>
+<li><p>禁止重排序</p>
+<blockquote>
+<p>为了程序性能、处理器、编译器都会对程序进行重排序处理，多线程模式下会导致线程不安全</p>
+</blockquote>
+</li>
+<li><p>volatile是否能保证原子性?</p>
+<blockquote>
+<p>Volatile无法保证原子性，当某一个线程读取变量时，还没写入主内存就被阻塞，无法导致其它线程工作内存变量无效。使得原子性无法得到保证。i++ 并非原子性操作，自增后再赋值。</p>
+</blockquote>
+</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div id="donation_div"></div>
+
+<script src="/js/vdonate.js"></script>
+<script>
+var a = new Donate({
+  title: '如果觉得我的文章对您有用，请随意打赏。您的支持将鼓励我继续创作!', // 可选参数，打赏标题
+  btnText: '打赏支持', // 可选参数，打赏按钮文字
+  el: document.getElementById('donation_div'),
+  wechatImage: 'https://raw.githubusercontent.com/iTimeTraveler/iTimeTraveler.github.io/site/source/about/donate/images/WeChanQR.png',
+  alipayImage: 'https://raw.githubusercontent.com/iTimeTraveler/iTimeTraveler.github.io/site/source/about/donate/images/AliPayQR.jpg'
+});
+</script>
+      
+      
+      <div>
+        <ul class="post-copyright">
+          <li class="post-copyright-author">
+          <strong>本文作者:  </strong>LeBron Tao
+          </li>
+          <li class="post-copyright-link">
+          <strong>本文链接:  </strong>
+          <a href="/2020/11/26/多线程与高并发/" target="_blank" title="多线程与高并发">https://sunshine23lin.github.io/2020/11/26/多线程与高并发/</a>
+          </li>
+          <li class="post-copyright-license">
+            <strong>版权声明:   </strong>
+            本博客所有文章除特别声明外，均采用 <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">CC BY-NC-ND 4.0</a>
+            许可协议。转载请注明出处
+          </li>
+         
+        </ul>
+<div>
+</div></div>
+      
+      
+        
+	<div id="comment">
+		<!-- 来必力City版安装代码 -->
+		<div id="lv-container" data-id="city" data-uid="MTAyMC8yOTQ4MS82MDQ5">
+		<script type="text/javascript">
+		   (function(d, s) {
+		       var j, e = d.getElementsByTagName(s)[0];
+
+		       if (typeof LivereTower === 'function') { return; }
+
+		       j = d.createElement(s);
+		       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+		       j.async = true;
+
+		       e.parentNode.insertBefore(j, e);
+		   })(document, 'script');
+		</script>
+		<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+		</div>
+		<!-- City版安装代码已完成 -->
+	</div>
+
+
+
+      
+      
+        
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/多线程与高并发/">多线程与高并发</a></li></ul>
+
+      
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/11/26/netty-1/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">网络框架-Netty</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+<!-- Table of Contents -->
+
+  <aside id="toc-sidebar">
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、并发基础"><span class="nav-number">1.</span> <span class="nav-text">一、并发基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-并发三大特性"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 并发三大特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-线程基础"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 线程基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-线程的实现3种实现方式"><span class="nav-number">1.2.1.</span> <span class="nav-text">1. 线程的实现3种实现方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-线程5种状态"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.线程5种状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-线程之间通讯"><span class="nav-number">1.2.3.</span> <span class="nav-text">3.线程之间通讯</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-线程中断"><span class="nav-number">1.2.4.</span> <span class="nav-text">3.线程中断</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-Volatile关键字"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 Volatile关键字</span></a></li></ol></li></ol>
+    
+    </div>
+  </aside>
+
+</section>
+        
+      </div>
+      
+      <footer id="footer">
+  
+
+  <div class="container">
+      	<div class="row">
+	      <p> Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/iTimeTraveler/hexo-theme-hiker" target="_blank">Hexo-theme-hiker</a> </p>
+	      <p id="copyRightEn">Copyright &copy; 2013 - 2020 JAVA All Rights Reserved.</p>
+	      
+	      
+    		<p class="busuanzi_uv">
+				访客数 : <span id="busuanzi_value_site_uv"></span> |  
+				访问量 : <span id="busuanzi_value_site_pv"></span>
+		    </p>
+  		   
+		</div>
+
+		
+  </div>
+</footer>
+
+
+<!-- min height -->
+
+<script>
+    var wrapdiv = document.getElementById("wrap");
+    var contentdiv = document.getElementById("content");
+    var allheader = document.getElementById("allheader");
+
+    wrapdiv.style.minHeight = document.body.offsetHeight + "px";
+    if (allheader != null) {
+      contentdiv.style.minHeight = document.body.offsetHeight - allheader.offsetHeight - document.getElementById("footer").offsetHeight + "px";
+    } else {
+      contentdiv.style.minHeight = document.body.offsetHeight - document.getElementById("footer").offsetHeight + "px";
+    }
+</script>
+    </div>
+    <!-- <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/categories" class="mobile-nav-link">Categories</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tags</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav> -->
+    
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/scripts.js"></script>
+
+
+
+
+  <script src="/js/dialog.js"></script>
+
+
+
+
+
+
+
+
+	<div style="display: none;">
+    <script src="https://s95.cnzz.com/z_stat.php?id=1260716016&web_id=1260716016" language="JavaScript"></script>
+  </div>
+
+
+
+	<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+	</script>
+
+
+
+
+
+
+  </div>
+
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="myModalLabel">设置</h2>
+      </div>
+      <hr style="margin-top:0px; margin-bottom:0px; width:80%; border-top: 3px solid #000;">
+      <hr style="margin-top:2px; margin-bottom:0px; width:80%; border-top: 1px solid #000;">
+
+
+      <div class="modal-body">
+          <div style="margin:6px;">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" onclick="javascript:setFontSize();" aria-expanded="true" aria-controls="collapseOne">
+              正文字号大小
+            </a>
+          </div>
+          <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+          <div class="panel-body">
+            您已调整页面字体大小
+          </div>
+        </div>
+      
+
+
+          <div style="margin:6px;">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" onclick="javascript:setBackground();" aria-expanded="true" aria-controls="collapseTwo">
+              夜间护眼模式
+            </a>
+        </div>
+          <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+          <div class="panel-body">
+            夜间模式已经开启，再次单击按钮即可关闭 
+          </div>
+        </div>
+
+        <div>
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="true" aria-controls="collapseThree">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;关 于&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+        </div>
+         <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+          <div class="panel-body">
+            JAVA
+          </div>
+          <div class="panel-body">
+            Copyright © 2020 LeBron Tao All Rights Reserved.
+          </div>
+        </div>
+      </div>
+
+
+      <hr style="margin-top:0px; margin-bottom:0px; width:80%; border-top: 1px solid #000;">
+      <hr style="margin-top:2px; margin-bottom:0px; width:80%; border-top: 3px solid #000;">
+      <div class="modal-footer">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+      </div>
+    </div>
+  </div>
+</div>
+  
+  <a id="rocket" href="#top" class=""></a>
+  <script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+  
+    <a id="menu-switch"><i class="fa fa-bars fa-lg"></i></a>
+  
+</body>
+</html>

@@ -1,27 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>Hexo</title>
+  <title>JAVA</title>
   
   
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://sunshine23lin.github.io/"/>
-  <updated>2020-11-26T08:32:28.049Z</updated>
+  <updated>2020-11-26T09:32:04.471Z</updated>
   <id>https://sunshine23lin.github.io/</id>
   
   <author>
-    <name>John Doe</name>
+    <name>LeBron Tao</name>
     
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>多线程与高并发</title>
+    <link href="https://sunshine23lin.github.io/2020/11/26/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B8%8E%E9%AB%98%E5%B9%B6%E5%8F%91/"/>
+    <id>https://sunshine23lin.github.io/2020/11/26/多线程与高并发/</id>
+    <published>2020-11-26T08:55:29.000Z</published>
+    <updated>2020-11-26T09:32:04.471Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="一、并发基础"><a href="#一、并发基础" class="headerlink" title="一、并发基础"></a>一、并发基础</h1><h2 id="1-1-并发三大特性"><a href="#1-1-并发三大特性" class="headerlink" title="1.1 并发三大特性"></a>1.1 并发三大特性</h2><ul><li><p>原子性</p><p>指一个操作是不可中断的，要么全部执行成功，要么全部失败 </p></li><li><p>有序性</p><p>程序执行顺序按照代码的先后顺序执行</p></li><li><p>可见性</p><p>指多个线程访问同一个变量时，一个线程修改了这个变量的值,其它线程能够立马看到修改的值</p></li></ul><h2 id="1-2-线程基础"><a href="#1-2-线程基础" class="headerlink" title="1.2 线程基础"></a>1.2 线程基础</h2><h3 id="1-线程的实现3种实现方式"><a href="#1-线程的实现3种实现方式" class="headerlink" title="1. 线程的实现3种实现方式"></a>1. 线程的实现3种实现方式</h3><ol><li>继承Thread</li><li>实现Runable接口</li><li>实现callable接口，有返回值</li></ol><h3 id="2-线程5种状态"><a href="#2-线程5种状态" class="headerlink" title="2.线程5种状态"></a>2.线程5种状态</h3><blockquote><p>新建、就绪、运行、阻塞、死亡</p></blockquote><h3 id="3-线程之间通讯"><a href="#3-线程之间通讯" class="headerlink" title="3.线程之间通讯"></a>3.线程之间通讯</h3><ul><li>object对象wait()，notifyAll()</li><li>Codition对象await(),signalAll()</li></ul><h3 id="3-线程中断"><a href="#3-线程中断" class="headerlink" title="3.线程中断"></a>3.线程中断</h3><ol><li>调用interrupt()方法+return</li><li>调用interrupt()方法+抛异常throw new InterruptedException()</li></ol><blockquote><p>Interrupt方法就是把中断状态由false变成true</p></blockquote><h2 id="1-3-Volatile关键字"><a href="#1-3-Volatile关键字" class="headerlink" title="1.3 Volatile关键字"></a>1.3 Volatile关键字</h2><blockquote><p>Volatile是java一个关键字，该关键字修饰的字段，被某线程修改时，对其它线程可见。它保证了线程可见性和禁止指令重排序</p></blockquote><ol><li><p>底层实现</p><blockquote><p>在java内存模型当中，线程是不能直接操作主内存共享变量，而是拷贝一份到自己工作内存当中。对于声明volatile变量进行写操作时，会马上写入主内存，并导致其它线程工作内存的值无效，当其它线程需要访问该变量时，就需要从主内存获取最新的值。此时就保证了线程可见。</p><p>JVM底层操作：JVM会向处理器发送一个Lock前缀指令，Lock前缀会引起处理器缓存回写到主内存，并使其它处理器的缓存无效</p></blockquote></li><li><p>禁止重排序</p><blockquote><p>为了程序性能、处理器、编译器都会对程序进行重排序处理，多线程模式下会导致线程不安全</p></blockquote></li><li><p>volatile是否能保证原子性?</p><blockquote><p>Volatile无法保证原子性，当某一个线程读取变量时，还没写入主内存就被阻塞，无法导致其它线程工作内存变量无效。使得原子性无法得到保证。i++ 并非原子性操作，自增后再赋值。</p></blockquote></li></ol>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;一、并发基础&quot;&gt;&lt;a href=&quot;#一、并发基础&quot; class=&quot;headerlink&quot; title=&quot;一、并发基础&quot;&gt;&lt;/a&gt;一、并发基础&lt;/h1&gt;&lt;h2 id=&quot;1-1-并发三大特性&quot;&gt;&lt;a href=&quot;#1-1-并发三大特性&quot; class=&quot;headerli
+      
+    
+    </summary>
+    
+      <category term="并发编程" scheme="https://sunshine23lin.github.io/categories/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/"/>
+    
+    
+      <category term="多线程与高并发" scheme="https://sunshine23lin.github.io/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B8%8E%E9%AB%98%E5%B9%B6%E5%8F%91/"/>
+    
+  </entry>
+  
+  <entry>
     <title>网络框架-Netty</title>
     <link href="https://sunshine23lin.github.io/2020/11/26/netty-1/"/>
     <id>https://sunshine23lin.github.io/2020/11/26/netty-1/</id>
     <published>2020-11-26T08:27:08.000Z</published>
-    <updated>2020-11-26T08:32:28.049Z</updated>
+    <updated>2020-11-26T09:21:32.587Z</updated>
     
     <content type="html"><![CDATA[<h2 id="一、netty的简介"><a href="#一、netty的简介" class="headerlink" title="一、netty的简介"></a>一、netty的简介</h2><ol><li><p>什么是Netty</p><blockquote><p>Netty是一个利用java的高级网络的能力,隐藏其背后的复杂性而提供一个易于使用的API的客户端/服务器框架。</p></blockquote></li><li><p>Netty构成部分<br>Channel</p><blockquote><p>Channel是NIO基本结构,他代表一个用于连接到实体如硬件设备、文件、网络套接字或程序组件,能够执行一个或者多个不同的I/O操作的开发连接。<br>把Channel想象成一个可以”打开”或者”关闭”,”连接”或”断开”和作为传入和传出数据的运输。</p></blockquote></li></ol><p>Callback (回调)</p><blockquote><p>callback (回调)是一个简单的方法,提供给另一种方法作为引用,这样后者就可以在某个合适的 时间调用前者。这种技术被广泛使用在各种编程的情况下,最常见的方法之一通知给其他人操 作已完成。</p></blockquote><p>Future</p><blockquote><p>Future 提供了另外一种通知应用操作已经完成的方式。这个对象作为一个异步操作结果的占 位符,它将在将来的某个时候完成并提供结果。</p></blockquote><p>Event和Handler</p><blockquote><p>Netty使用不同的事件来通知我们更改的状态和操作的状态。这使我们能够根据发送的事件触发适当的行为。<br>这些行为可能包括:</p><ul><li>日志</li><li>数据转换</li><li>流控制</li><li>应用程序逻辑</li></ul></blockquote><p>由于Netty是一个网络框架,事件很清晰的跟入站或或出站数据流相关。因为一些事件可能触发传入的数据或状态的变化包括：</p><ul><li>活动或者非活动连接</li><li>数据的读取</li><li>用户事件</li><li>错误</li></ul><p>出站事件是由于在未来操作将触发一个动作。这些包括:</p><ul><li>打开或关闭一个连接到远程</li><li>写或冲刷数据到socket</li></ul>]]></content>
     
